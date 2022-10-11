@@ -1,10 +1,10 @@
 package com.tomaswardle.williamsleacodetest;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
-
-import javax.tools.DocumentationTool.Location;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +19,22 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
         InputStream fileStream = null; 
-        StringBuilder fileContents = new StringBuilder("");
-        byte[] content = new byte[10];
+        StringBuilder fileContents = new StringBuilder();
+
         try {
             fileStream = file.getInputStream();
+            InputStreamReader reader = new InputStreamReader(fileStream, StandardCharsets.US_ASCII);
+            BufferedReader breader = new BufferedReader(reader);
             
-            while(fileStream.read(content) != -1) {
-                fileContents.append(content);
+            while(true) {
+                String line = breader.readLine();
+                if (line == null) {
+                    break;
+                }
+                
+                fileContents.append(line);
+                fileContents.append("\n");
             }
-            fileStream.read();
         } catch(IOException ex) {
             return new ResponseEntity<String>("Error reading file.",HttpStatus.BAD_REQUEST);
         } finally {
