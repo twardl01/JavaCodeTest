@@ -7,12 +7,12 @@ import java.util.HashMap;
 public class RecordExtractor {
     
     private HashMap<String, String> eventTypes;
-    private ArrayList<Record> records;
-    private Record object1;
-    private Record object2;
+    private ArrayList<RecordBuilder> records;
+    private RecordBuilder builder1;
+    private RecordBuilder builder2;
 
-    public Record[] getRecords() {
-        return (Record[]) records.toArray();
+    public RecordBuilder[] getRecords() {
+        return (RecordBuilder[]) records.toArray();
     }
 
     public void setEventTypes(HashMap<String, String> newDict) {
@@ -24,22 +24,19 @@ public class RecordExtractor {
     }
 
     public void processLine(String line) {
-        if (line.substring(47,55).trim().equals("")) {
-            object2.companyName += line.substring(10,47).trim();
-        } else {
-            object1.companyName = line.substring(10,47);
-            object1.companyNum = Integer.parseInt(line.substring(47,55));
-            object1.eventType = line.substring(59,63);
-            object1.eventDate = LocalDate.parse(line.substring(64,74));
+        //if company num present on new line, add old record to arraylist and intialise next obj 
+        processRecord(builder1.addData(line.substring(10,74)));
+        processRecord(builder2.addData(line.substring(76,140)));
+    }
+
+    private boolean processRecord(Record r) {
+        //
+        if (r == null) {
+            return false;
         }
 
-        if (line.substring(47,55).trim().equals("")) {
-            object2.companyName += line.substring(10,47);
-        } else {
-            object2.companyName = line.substring(10,47);
-            object2.companyNum = Integer.parseInt(line.substring(47,55));
-            object2.eventType = line.substring(0,1);
-            object2.eventDate = LocalDate.parse(line.substring(64,74));
-        }
+        //TODO store new record
+
+        return true;
     }
 }

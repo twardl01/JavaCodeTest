@@ -13,7 +13,7 @@ public class LineProcessor {
     public void processLine(String line) {
         if (line.contains("* DOCUMENTS ISSUED *")) {
             eventTypeInput = false;
-            recordExtractor = new RecordExtractor(eventExtractor.getDict());
+            recordExtractor = new RecordExtractor(eventExtractor.getHashmap());
             return;
         }
 

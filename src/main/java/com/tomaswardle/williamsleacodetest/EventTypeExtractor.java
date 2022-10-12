@@ -4,25 +4,34 @@ import java.util.HashMap;
 
 public class EventTypeExtractor {
     
-    private HashMap<String, String> eventDict;
-    private String eventCode;
-    private String eventDesc;
+    private HashMap<String, String> eventDict = new HashMap<String,String>();
+    private String eventCode = "";
+    private String eventDesc = "";
 
     //if new data includes code, add currently stored data to hashmap + set eventCode and eventDesc
     //if no code, assume line writes over
     public void processLine(String line) {
+        String parsedDesc = line.substring(27).stripTrailing();
+        if(line.charAt(27) == ' ') {
+            return;
+        }
+
+        //if the line has an eventType, create new definition
         if (line.charAt(20) == '(') {
             if (!eventCode.isEmpty() && !eventDesc.isEmpty()) {
-                eventDict.put(line,line);
+                eventDict.put(eventCode,eventDesc);
             }
-            eventCode = line.substring(20, 25);
-            eventDesc = line.substring(28).stripTrailing();
+            eventCode = line.substring(20, 27).trim();
+            eventDesc = parsedDesc;
         } else {
-            eventDesc += line.substring(28).stripTrailing();
+            eventDesc += " " + parsedDesc;
         }
     }
-
-    public HashMap<String, String> getDict() {
+    
+    public HashMap<String, String> getHashmap() {
+        if (!eventCode.isEmpty() && !eventDesc.isEmpty()) {
+            eventDict.put(eventCode,eventDesc);
+        }
         return eventDict;
     }
 }
