@@ -1,42 +1,41 @@
 package com.tomaswardle.williamsleacodetest;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
-public class RecordExtractor {
-    
-    private HashMap<String, String> eventTypes;
-    private ArrayList<RecordBuilder> records;
+public class RecordExtractor  {
+
     private RecordBuilder builder1;
     private RecordBuilder builder2;
-
-    public RecordBuilder[] getRecords() {
-        return (RecordBuilder[]) records.toArray();
-    }
-
-    public void setEventTypes(HashMap<String, String> newDict) {
-        eventTypes = newDict;
-    }
+    private IRecordTable table;
     
-    public RecordExtractor(HashMap<String, String> events) {
-        this.eventTypes = events;
+    public RecordExtractor(Map<String, String> events, IRecordTable table) {
+        this.builder1 = new RecordBuilder(events);
+        this.builder2 = new RecordBuilder(events);
+        this.table = table;
     }
 
-    public void processLine(String line) {
+    //returns num of finished records
+    public int processLine(String line) {
         //if company num present on new line, add old record to arraylist and intialise next obj 
-        processRecord(builder1.addData(line.substring(10,74)));
-        processRecord(builder2.addData(line.substring(76,140)));
+        int count = processRecord(builder1.addData(StringMethods.getSubstring(line,10,74)));
+        count += processRecord(builder2.addData(StringMethods.getSubstring(line,76)));
+
+        return count;
     }
 
-    private boolean processRecord(Record r) {
-        //
+    private int processRecord(Record r) {
         if (r == null) {
-            return false;
+            return 0;
         }
 
-        //TODO store new record
+        this.table.add(r);
 
-        return true;
+        return 1;
+    }
+
+    public int close() {
+        int count = processRecord(builder1.fetchRecord());
+        count += processRecord(builder2.fetchRecord());
+        return count;
     }
 }

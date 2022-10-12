@@ -1,6 +1,7 @@
 package com.tomaswardle.williamsleacodetest;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class EventTypeExtractor {
     
@@ -28,7 +29,7 @@ public class EventTypeExtractor {
         }
     }
     
-    public HashMap<String, String> getHashmap() {
+    public Map<String, String> getMap() {
         if (!eventCode.isEmpty() && !eventDesc.isEmpty()) {
             eventDict.put(eventCode,eventDesc);
         }

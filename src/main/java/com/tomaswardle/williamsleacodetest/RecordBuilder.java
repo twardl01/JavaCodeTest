@@ -2,18 +2,18 @@ package com.tomaswardle.williamsleacodetest;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.Map;
 
 public class RecordBuilder {
     private String companyName;
-    private int companyNum;
+    private String companyNum;
     private String eventType;
     private LocalDate eventDate;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private HashMap<String,String> maps = null;
+    private Map<String,String> maps = null;
 
-    public RecordBuilder(HashMap<String,String> map) {
-        maps = map;
+    public RecordBuilder(Map<String, String> events) {
+        maps = events;
     }
 
     //adds/updates data stored in object
@@ -21,29 +21,28 @@ public class RecordBuilder {
         //if company num not present, line is a continuation of another company's name.
         //event type and event date can be null
         Record newR = null;
-        String parseCompanyNumber = line.substring(37,45).trim();
-        String parseCompanyName = line.substring(0,37).stripTrailing();
+        String parseCompanyName = StringMethods.getSubstring(line,0,37);
+        String parseCompanyNumber = StringMethods.getSubstring(line,37,45);
 
-        if (parseCompanyNumber.isEmpty()) {
+        if (parseCompanyNumber == null || parseCompanyNumber.isEmpty()) {
             this.companyName += parseCompanyName;
         } else {
-            newR = new Record(companyName,companyNum,eventType,eventDate);
-            this.companyName = parseCompanyName;
-            this.companyNum = Integer.parseInt(parseCompanyNumber);
-            
-            String parsedType = line.substring(49,53).trim();
-            if (!parsedType.isEmpty()) {
-                this.eventType = parsedType;
-            } else {
-                this.eventType = null;
+            if (companyName != null) {
+                newR = new Record(companyName,companyNum,eventType,eventDate);
             }
+
+            this.companyName = parseCompanyName;
+            this.companyNum = parseCompanyNumber;
             
-            String parsedDate = line.substring(54,64).trim();
+            String parsedType = StringMethods.getSubstring(line,49,53);
+            this.eventType = maps.get(parsedType);
+            
             //handles no eventDate
-            if (!parsedDate.isEmpty()) {
-                this.eventDate = LocalDate.parse(parsedDate,formatter);
-            } else {
+            String parsedDate = StringMethods.getSubstring(line,54,64);
+            if (parsedDate == null || parsedDate.isEmpty()) {
                 this.eventDate = null;
+            } else {
+                this.eventDate = LocalDate.parse(parsedDate,formatter);
             }
         }
 

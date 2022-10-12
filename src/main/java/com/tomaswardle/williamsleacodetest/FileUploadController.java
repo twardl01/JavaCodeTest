@@ -18,13 +18,13 @@ public class FileUploadController {
     
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        InputStream fileStream = null; 
-        StringBuilder fileContents = new StringBuilder();
+        LineProcessor lProc = new LineProcessor();
+        int count = 0;
 
-        try {
-            fileStream = file.getInputStream();
+        try (InputStream fileStream = file.getInputStream();
             InputStreamReader reader = new InputStreamReader(fileStream, StandardCharsets.US_ASCII);
-            BufferedReader breader = new BufferedReader(reader);
+            BufferedReader breader = new BufferedReader(reader)){
+
             
             while(true) {
                 String line = breader.readLine();
@@ -32,21 +32,13 @@ public class FileUploadController {
                     break;
                 }
                 
-                fileContents.append(line);
-                fileContents.append("\n");
+                lProc.processLine(line);
             }
+            count = lProc.close();
         } catch(IOException ex) {
-            return new ResponseEntity<String>("Error reading file.",HttpStatus.BAD_REQUEST);
-        } finally {
-            if(fileStream != null) {
-                try {
-                    fileStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            return new ResponseEntity<>("Error reading file.",HttpStatus.BAD_REQUEST);
         }
         
-        return new ResponseEntity<String>(fileContents.toString(),HttpStatus.OK);
+        return new ResponseEntity<>("Records Read: " + count,HttpStatus.OK);
 	}
 }
