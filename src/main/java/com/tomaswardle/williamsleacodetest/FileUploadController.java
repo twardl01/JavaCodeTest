@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class FileUploadController {
     
+    @Autowired
+    private LineProcessor lProc;
+
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        LineProcessor lProc = new LineProcessor();
+       
         int count = 0;
 
         //try with statement creates bufferedReader from filestream

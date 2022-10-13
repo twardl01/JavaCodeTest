@@ -3,6 +3,11 @@ package com.tomaswardle.williamsleacodetest;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
+@Component
+@RequestScope
 public class EventTypeExtractor {
     
     private HashMap<String, String> eventDict = new HashMap<String,String>();

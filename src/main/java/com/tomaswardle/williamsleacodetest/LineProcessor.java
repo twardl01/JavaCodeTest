@@ -1,12 +1,22 @@
 package com.tomaswardle.williamsleacodetest;
-
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
+@Component
+@RequestScope
 public class LineProcessor {
-    
+
     private boolean eventTypeInput;
+
+    @Autowired
     private RecordExtractor recordExtractor;
-    private EventTypeExtractor eventExtractor = new EventTypeExtractor();
+
+    @Autowired
+    private EventTypeExtractor eventExtractor;
+
     private int recordCount;
 
     //constructor
@@ -22,7 +32,7 @@ public class LineProcessor {
         if (line.contains("* DOCUMENTS ISSUED *")) {
             Map<String,String> events = eventExtractor.getMap();
             eventTypeInput = false;
-            recordExtractor = new RecordExtractor(events, new ArrayRecordTable());
+            recordExtractor.start(events);
             return;
         }
 

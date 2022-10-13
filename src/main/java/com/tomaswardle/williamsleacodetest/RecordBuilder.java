@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.web.context.annotation.RequestScope;
+import com.tomaswardle.williamsleacodetest.record.model.Record;
+
+@RequestScope
 public class RecordBuilder {
     private String companyName;
     private String companyNum;
@@ -28,7 +32,9 @@ public class RecordBuilder {
         String parseCompanyName = StringMethods.getSubstring(line,0,37);
         String parseCompanyNumber = StringMethods.getSubstring(line,37,45);
 
+        //if company num is null, continuation of last line
         if (parseCompanyNumber == null || parseCompanyNumber.isEmpty()) {
+            //ignores empty lines
             if (parseCompanyName != null) {
                 this.companyName += parseCompanyName;
             }
@@ -64,12 +70,12 @@ public class RecordBuilder {
         return newR;
     }
 
-    //handles invalid names
+    //detects invalid names
     private boolean invalidCompanyName(String name) {
         return name == null || name.isEmpty();
     }
 
-    //as the num is a string, handles cases where the "num" string contains letters/symbols.
+    //as the num is a string, detects cases where the "num" string contains letters/symbols.
     private boolean invalidCompanyNum(String num) {
         if (num == null) {
             return true;
@@ -81,7 +87,7 @@ public class RecordBuilder {
         return nonNumMatcher.find();
     }
 
-    //handles cases where a non-existent event type is specified
+    //detects cases where a non-existent event type is specified
     private boolean invalidEventType(String event) {
         if (event == null) {
             return false;
@@ -90,7 +96,7 @@ public class RecordBuilder {
         return !event.isEmpty() && maps.get(event) == null;
     }
 
-    //handles dates that are specified but imparsible
+    //detects dates that are specified but imparsible
     private boolean invalidEventDate(String date) {
         if (date == null) {
             return false;
@@ -106,6 +112,7 @@ public class RecordBuilder {
         } catch(DateTimeParseException pe) {
             return true;
         }
+
         return false;
     }
 

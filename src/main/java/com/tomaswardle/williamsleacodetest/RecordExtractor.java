@@ -2,17 +2,29 @@ package com.tomaswardle.williamsleacodetest;
 
 import java.util.Map;
 
+import com.tomaswardle.williamsleacodetest.record.model.Record;
+import com.tomaswardle.williamsleacodetest.record.repository.IRecordRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
+@Component
+@RequestScope
 public class RecordExtractor  {
+
+    @Autowired
+    IRecordRepository recordRepository;
 
     private RecordBuilder builder1;
     private RecordBuilder builder2;
-    private IRecordTable table;
+
+    @Autowired
+    private IRecordRepository table;
     
     //constructor
-    public RecordExtractor(Map<String, String> events, IRecordTable table) {
+    public void start(Map<String, String> events) {
         this.builder1 = new RecordBuilder(events);
         this.builder2 = new RecordBuilder(events);
-        this.table = table;
     }
 
     //returns num of finished records
@@ -30,7 +42,7 @@ public class RecordExtractor  {
             return 0;  
         }
 
-        this.table.add(r);
+        this.table.save(r);
         return 1;
     }
 
