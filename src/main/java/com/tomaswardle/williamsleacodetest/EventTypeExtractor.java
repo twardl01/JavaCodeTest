@@ -9,7 +9,7 @@ public class EventTypeExtractor {
     private String eventCode = "";
     private String eventDesc = "";
 
-    //if new data includes code, add currently stored data to hashmap + set eventCode and eventDesc
+    //if new data includes code, add currently stored data to map + set eventCode and eventDesc
     //if no code, assume line writes over
     public void processLine(String line) {
         String parsedDesc = line.substring(27).stripTrailing();

@@ -21,11 +21,13 @@ public class FileUploadController {
         LineProcessor lProc = new LineProcessor();
         int count = 0;
 
+        //try with statement creates bufferedReader from filestream
         try (InputStream fileStream = file.getInputStream();
             InputStreamReader reader = new InputStreamReader(fileStream, StandardCharsets.US_ASCII);
             BufferedReader breader = new BufferedReader(reader)){
 
             
+            //reads lines in until end of file.
             while(true) {
                 String line = breader.readLine();
                 if (line == null) {

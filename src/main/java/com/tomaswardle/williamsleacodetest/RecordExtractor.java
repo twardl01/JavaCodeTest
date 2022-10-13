@@ -8,6 +8,7 @@ public class RecordExtractor  {
     private RecordBuilder builder2;
     private IRecordTable table;
     
+    //constructor
     public RecordExtractor(Map<String, String> events, IRecordTable table) {
         this.builder1 = new RecordBuilder(events);
         this.builder2 = new RecordBuilder(events);
@@ -23,16 +24,17 @@ public class RecordExtractor  {
         return count;
     }
 
+    //adds record to database, returns 1 if success, 0 if not.
     private int processRecord(Record r) {
         if (r == null) {
-            return 0;
+            return 0;  
         }
 
         this.table.add(r);
-
         return 1;
     }
 
+    //closes recordextractor, enters records in builder's properties and returns the number of records written.
     public int close() {
         int count = processRecord(builder1.fetchRecord());
         count += processRecord(builder2.fetchRecord());

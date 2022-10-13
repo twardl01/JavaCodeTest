@@ -14,4 +14,8 @@ public class Record {
         this.eventType = event;
         this.eventDate = date;
     }
+
+    public boolean isValid() {
+        return !(this.companyName == null || this.companyNum == null);
+    }
 }

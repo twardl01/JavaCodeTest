@@ -1,10 +1,12 @@
 package com.tomaswardle.williamsleacodetest;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,11 +14,41 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class WilliamsleacodetestApplicationTests {
 
+	//tests to see if the events are properly extracted
+	@Test
+	void eventsExtracted() {
+		EventTypeExtractor e = new EventTypeExtractor();
+		HashMap<String,String> testcase = new HashMap<String,String>();
+
+		testcase.put("(A)","CERTIFICATES OF INCORPORATION");
+		testcase.put("(B1)","THE COMPANY'S MEMORANDUM AND ARTICLES.");
+		testcase.put("(B2)","ANY AMENDMENT TO COMPANY'S ARTICLES (INCLUDING EVERY RESOLUTION OR AGREEMENT REQUIRED TO BE EMBODIED IN OR ANNEXED TO COPIES OF THE COMPANY'S ARTICLES ISSUED BY THE COMPANY).");
+		testcase.put("(G11)","ANY STATEMENT OF COMPLIANCE DELIVERED UNDER SECTION 762 (STATEMENT THAT COMPANY MEETS CONDITIONS FOR ISSUE OF TRADING CERTIFICATE).");
+
+		//tests contains all possible lines within the document
+		String[] tests = 
+		{
+			"                    (A)    CERTIFICATES OF INCORPORATION",
+			"                    (B1)   THE COMPANY'S MEMORANDUM AND ARTICLES.",
+			"                    (B2)   ANY AMENDMENT TO COMPANY'S ARTICLES (INCLUDING EVERY RESOLUTION OR AGREEMENT REQUIRED TO BE EMBODIED IN OR",
+			"                           ANNEXED TO COPIES OF THE COMPANY'S ARTICLES ISSUED BY THE COMPANY).",
+			"                    (G11)  ANY STATEMENT OF COMPLIANCE DELIVERED UNDER SECTION 762 (STATEMENT THAT COMPANY MEETS CONDITIONS FOR ISSUE OF",
+			"                           TRADING CERTIFICATE).",
+			"                                                                                                  LOUISE SMYTH",
+			"                                                                                                  REGISTRAR OF COMPANIES"
+		};
+		
+		for (String test : tests) {
+			e.processLine(test);
+		}
+
+		assertEquals(testcase,e.getMap());
+	}
+
 	@Test
 	void recordUpdates() {
-		HashMap<String,String> m = new HashMap<String,String>();
-		m.put("(C2)","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.");
-		RecordBuilder r = new RecordBuilder(m);
+		RecordBuilder r = recordAdditionSetup();
+
 		r.addData("ASH RAIL LTD                         11467106    (C2) 01/05/2020");
 		Record rec = r.fetchRecord();
 
@@ -70,35 +102,31 @@ class WilliamsleacodetestApplicationTests {
 		assertEquals(LocalDate.of(2020,05,01), rec.eventDate);
 	}
 
-	//tests to see if the events are properly extracted
 	@Test
-	void eventsExtracted() {
-		EventTypeExtractor e = new EventTypeExtractor();
-		HashMap<String,String> testcase = new HashMap<String,String>();
+	void recordHandlesInvalidNumber() {
+		RecordBuilder r = recordAdditionSetup();
 
-		testcase.put("(A)","CERTIFICATES OF INCORPORATION");
-		testcase.put("(B1)","THE COMPANY'S MEMORANDUM AND ARTICLES.");
-		testcase.put("(B2)","ANY AMENDMENT TO COMPANY'S ARTICLES (INCLUDING EVERY RESOLUTION OR AGREEMENT REQUIRED TO BE EMBODIED IN OR ANNEXED TO COPIES OF THE COMPANY'S ARTICLES ISSUED BY THE COMPANY).");
-		testcase.put("(G11)","ANY STATEMENT OF COMPLIANCE DELIVERED UNDER SECTION 762 (STATEMENT THAT COMPANY MEETS CONDITIONS FOR ISSUE OF TRADING CERTIFICATE).");
+		r.addData("ASH RAIL LTD                         114b7106    (C2) 01/05/2020");
+		Record rec = r.fetchRecord();
+		assertTrue(!rec.isValid());
+	}
 
-		//tests contains all possible lines within the document
-		String[] tests = 
-		{
-			"                    (A)    CERTIFICATES OF INCORPORATION",
-			"                    (B1)   THE COMPANY'S MEMORANDUM AND ARTICLES.",
-			"                    (B2)   ANY AMENDMENT TO COMPANY'S ARTICLES (INCLUDING EVERY RESOLUTION OR AGREEMENT REQUIRED TO BE EMBODIED IN OR",
-			"                           ANNEXED TO COPIES OF THE COMPANY'S ARTICLES ISSUED BY THE COMPANY).",
-			"                    (G11)  ANY STATEMENT OF COMPLIANCE DELIVERED UNDER SECTION 762 (STATEMENT THAT COMPANY MEETS CONDITIONS FOR ISSUE OF",
-			"                           TRADING CERTIFICATE).",
-			"                                                                                                  LOUISE SMYTH",
-			"                                                                                                  REGISTRAR OF COMPANIES"
-		};
-		
-		for (String test : tests) {
-			e.processLine(test);
-		}
+	@Test
+	void recordHandlesInvalidEventType() {
+		RecordBuilder r = recordAdditionSetup();
 
-		assertEquals(testcase,e.getMap());
+		r.addData("ASH RAIL LTD                         11467106    (C) 01/05/2020");
+		Record rec = r.fetchRecord();
+		assertTrue(!rec.isValid());
+	}
+
+	@Test
+	void recordHandlesInvalidEventDate() {
+		RecordBuilder r = recordAdditionSetup();
+
+		r.addData("ASH RAIL LTD                         11467106    (C2) 01/g5/2020");
+		Record rec = r.fetchRecord();
+		assertTrue(!rec.isValid());
 	}
 
 	//tests to see if the records are properly extracted from the file
@@ -119,7 +147,7 @@ class WilliamsleacodetestApplicationTests {
 		expectedRecords.add(new Record("ASH RAIL LTD","11467106","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.",LocalDate.of(2020, 05, 01)));
 		expectedRecords.add(new Record("ASH TREE FIELDS MANAGEMENT COMPANY","09062234","THE COMPANY'S CONFIRMATION STATEMENT.", LocalDate.of(2020,05,04)));
 		
-		ArrayList<Record> actualRecords = mockTable.getRecords();
+		List<Record> actualRecords = mockTable.getRecords();
 		assertEquals(expectedRecords.size(),actualRecords.size());
 
 		for(int i = 0; i < actualRecords.size(); i++) {
@@ -134,4 +162,9 @@ class WilliamsleacodetestApplicationTests {
 		assertEquals(r1.eventDate,r2.eventDate);
 	}
 
+	public RecordBuilder recordAdditionSetup() {
+		HashMap<String,String> m = new HashMap<String,String>();
+		m.put("(C2)","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.");
+		return new RecordBuilder(m);
+	}
 }
