@@ -5,7 +5,7 @@ This is a project that I undertook as a technical excercise for Williams Lea.
 The specification is as follows:
 
 "Write a java & spring boot application which has one endpoint “upload”.
-The endpoint should take a .txt file as input (see attached text file for format).
+The endpoint should take a .txt file as input (see SampleDataFile.txt for format).
 The text file should be split into records and stored in a database. 
 The record should contain:
 •       Company Name (taken directly from the text file, i.e. ASH RAIL LTD)
