@@ -20,31 +20,29 @@ public class TestRecordRepo implements IRecordRepository {
 
     @Override
     public <S extends Record> Iterable<S> saveAll(Iterable<S> entities) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         return null;
     }
 
     @Override
     public Optional<Record> findById(Integer id) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         return Optional.empty();
     }
 
     @Override
     public boolean existsById(Integer id) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         return false;
     }
 
     @Override
     public Iterable<Record> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return records;
     }
 
     @Override
     public Iterable<Record> findAllById(Iterable<Integer> ids) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -55,36 +53,30 @@ public class TestRecordRepo implements IRecordRepository {
 
     @Override
     public void deleteById(Integer id) {
-        // TODO Auto-generated method stub
-        
+        // not needed in implementation
     }
 
     @Override
     public void delete(Record entity) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         
     }
 
     @Override
     public void deleteAllById(Iterable<? extends Integer> ids) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         
     }
 
     @Override
     public void deleteAll(Iterable<? extends Record> entities) {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         
     }
 
     @Override
     public void deleteAll() {
-        // TODO Auto-generated method stub
+        // not needed in implementation
         
     }
-
-    public List<Record> getRecords() {
-        return null;
-    }
-
 }

@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class RecordBuilderTests {
     @Test
-	void recordUpdates() {
+	public void recordUpdates() {
 		RecordBuilder r = recordAdditionSetup();
 
 		r.addData("ASH RAIL LTD                         11467106    (C2) 01/05/2020");
@@ -27,7 +27,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordUpdateWithoutEvent() {
+	public void recordUpdateWithoutEvent() {
 		HashMap<String,String> m = new HashMap<String,String>();
 		m.put("(C2)","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.");
 		RecordBuilder r = new RecordBuilder(m);
@@ -41,7 +41,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordUpdateWithoutEventType() {
+	public void recordUpdateWithoutEventType() {
 		HashMap<String,String> m = new HashMap<String,String>();
 		m.put("(C2)","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.");
 		RecordBuilder r = new RecordBuilder(m);
@@ -56,7 +56,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordHandlesStraddling() {
+	public void recordHandlesStraddling() {
 		HashMap<String,String> m = new HashMap<String,String>();
 		m.put("(C2)","NOTIFICATION OF ANY CHANGE AMONG THE COMPANY'S DIRECTORS.");
 		RecordBuilder r = new RecordBuilder(m);
@@ -71,7 +71,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordHandlesInvalidNumber() {
+	public void recordHandlesInvalidNumber() {
 		RecordBuilder r = recordAdditionSetup();
 
 		r.addData("ASH RAIL LTD                         114b7106    (C2) 01/05/2020");
@@ -80,7 +80,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordHandlesInvalidEventType() {
+	public void recordHandlesInvalidEventType() {
 		RecordBuilder r = recordAdditionSetup();
 
 		r.addData("ASH RAIL LTD                         11467106    (C) 01/05/2020");
@@ -89,7 +89,7 @@ public class RecordBuilderTests {
 	}
 
 	@Test
-	void recordHandlesInvalidEventDate() {
+	public void recordHandlesInvalidEventDate() {
 		RecordBuilder r = recordAdditionSetup();
 
 		r.addData("ASH RAIL LTD                         11467106    (C2) 01/g5/2020");

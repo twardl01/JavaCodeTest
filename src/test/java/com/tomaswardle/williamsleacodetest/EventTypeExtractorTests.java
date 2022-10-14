@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class EventTypeExtractorTests {
     //tests to see if the events are properly extracted
 	@Test
-	void eventsExtracted() {
+	public void eventsExtracted() {
 		EventTypeExtractor e = new EventTypeExtractor();
 		HashMap<String,String> testcase = new HashMap<String,String>();
 

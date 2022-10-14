@@ -12,16 +12,18 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 public class RecordExtractor  {
 
-    @Autowired
     IRecordRepository recordRepository;
 
     private RecordBuilder builder1;
     private RecordBuilder builder2;
 
-    @Autowired
-    private IRecordRepository table;
     
     //constructor
+    public RecordExtractor(IRecordRepository repo) {
+        this.recordRepository = repo;
+    }  
+
+    //
     public void start(Map<String, String> events) {
         this.builder1 = new RecordBuilder(events);
         this.builder2 = new RecordBuilder(events);
@@ -42,7 +44,7 @@ public class RecordExtractor  {
             return 0;  
         }
 
-        this.table.save(r);
+        this.recordRepository.save(r);
         return 1;
     }
 
