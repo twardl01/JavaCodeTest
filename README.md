@@ -1,6 +1,6 @@
-# williamsleacodetest
+# JavaCodeTest
 
-This is a project that I undertook as a technical excercise for Williams Lea.
+This is a project that I undertook as a technical excercise.
 
 IDE Used: Visual Studio Code
 
@@ -28,7 +28,7 @@ Unit tests were used to test individual components.
 TO RUN:
 - Install Maven & Spring Boot, along with their dependencies
 - Install H2 Database Engine (https://www.h2database.com/html/main.html)
-- Run WilliamsLeacodetestApplication.java in src/main/java/com/tomaswardle/williamsleacodetest/ (ensure localhost:8080 is not in use)
+- Run JavaCodeTestApplication.java in src/main/java/com/tomaswardle/williamsleacodetest/ (ensure localhost:8080 is not in use)
  - If port 8080 is in use, add a server.port definition in application.properties
 - POST a txt file (the sample, or another file with the same format of the file) to http://localhost:8080/upload/, specifying the file with the file parameter.
 - Log in to http://localhost:8080/h2-console/ with username "sa" and no password to access the database
